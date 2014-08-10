@@ -1,0 +1,23 @@
+html {
+    height: 100%
+}
+
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0
+}
+
+#map-canvas {
+    height: 100%
+}
+
+.labels {
+    color: red;
+    background-color: white;
+    font-family: "Arial", "Helvetica", "sans-serif";
+    font-size: 10px;
+    text-align: center;
+    white-space: nowrap;
+    padding: 2px 2px;
+}

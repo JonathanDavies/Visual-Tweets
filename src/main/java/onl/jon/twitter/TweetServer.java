@@ -13,7 +13,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class TweetServer {
 
-    final static int tweetsPerSecond = 5;
+    final static int tweetsPerSecond = 2;
 
     public Server startSocketServer() {
         Server server = new Server();

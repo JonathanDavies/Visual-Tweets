@@ -1,46 +1,44 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <link href="main.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBD-kRmBTw0GFOPjUoxkJNZPXTGichE40E"></script>
+    <script src="markerwithlabel.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        function add_tweet_marker(map, tweet) {
+            var marker = new MarkerWithLabel({
+                map: map,
+                position: new google.maps.LatLng(tweet.geo.coordinates[0], tweet.geo.coordinates[1]),
+                labelContent: tweet.text,
+                labelAnchor: new google.maps.Point(22, 0),
+                labelClass: "labels"
+            });
+
+            setTimeout(function () {
+                marker.setVisible(false);
+                marker = undefined;
+            }, 5000)
+        }
+
+        function initialize() {
+            var canvas = document.getElementById("map-canvas")
+            var mapOptions = {
+                center: new google.maps.LatLng(30, 0),
+                zoom: 3
+            };
+            var map = new google.maps.Map(canvas, mapOptions);
+
+            var webSocket = new WebSocket('ws://localhost:8080/tweetSocket');
+            webSocket.onmessage = function (event) {
+                var tweet = JSON.parse(event.data);
+                console.log(tweet);
+                add_tweet_marker(map, tweet)
+            };
+        }
+        google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+</head>
 <body>
-<input id="message" type="text"/>
-<input type="submit" value="send" onclick="send()"/>
-
-<div id="messages"></div>
-
-<script type="text/javascript">
-    var webSocket = new WebSocket('ws://localhost:8080/tweetSocket');
-
-    webSocket.onerror = function (event) {
-        alert(event.data);
-    };
-
-    webSocket.onopen = function (event) {
-        displayMessage('Connection established');
-    };
-
-    webSocket.onmessage = function (event) {
-        displayMessage(event.data);
-    };
-
-    function displayMessage(message) {
-        var obj = JSON.parse(message);
-
-        var messageDiv = document.getElementById('messages')
-
-        var newP = document.createElement("p");
-        newP.appendChild(document.createTextNode(obj.text));
-        messageDiv.appendChild(newP);
-
-        setTimeout(function () {
-            newP.remove();
-        }, 5000);
-    }
-
-    function send() {
-        var txt = document.getElementById('message').value;
-        webSocket.send(txt);
-        return false;
-    }
-</script>
+<div id="map-canvas"/>
 </body>
-
 </html>
